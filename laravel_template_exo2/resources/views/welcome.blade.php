@@ -1,0 +1,16 @@
+@extends('layouts.index')
+
+@section('content')
+    @include('partials.00_nav')
+    @include('partials.01_masthead')
+    @include('partials.02_portfolio')
+    @include('partials.03_about')
+    @include('partials.04_contact')
+    @include('partials.05_footer')
+    @include('partials.modals.m00')
+    @include('partials.modals.m01')
+    @include('partials.modals.m02')
+    @include('partials.modals.m03')
+    @include('partials.modals.m04')
+    @include('partials.modals.m05')
+@endsection
