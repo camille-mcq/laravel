@@ -1,0 +1,169 @@
+// un exemple avec service 
+
+
+/// A • Insérer des données dans la bdd
+
+        0 // je créé la série de fichiers dont j'ai besoin : php artisan make:model Service -mfcr
+{{  }}
+        1 // CREATION DES TABLES 
+        je demande à laravel de créer ma table dans le dossier ### /Database/migration/2021_05_17_091243_create_services_table.php ### : 
+{{  }}{{  }}
+        2 // JE DIS AU MODEL OU SE TROUVE M{{  A TABLE   }}
+        je vais dans  ### /App/Models/ServiceController.php ###
+        et je dis au model comment s'appelle ma table et ce qu'elle contient 
+        via le protected $table et $fillable
+
+        3 // DANS LES FACTORY ON LUI DEMANDE DE GENERER DE LA DONNEE 
+        ### /Database/factories/ServiceFactory.php ### 
+
+        4 // APPELER LE SEEDER DANS LA DATABASE SEEDER{{  }}
+        ### /Database/seeders/DatabaseSeeder.php ### 
+        et on lui précise ou est le model et combien d'unités on veut mettre dans la base de donnée 
+
+
+/// B • Afficher les données
+    Gestion des blades 
+
+    1 / Routes (dans web.php)
+        • Créer une route qui appelle une fonction dans le controller ->  ( Route::get('/services', [ServiceController::class, "index"] ); )
+        • puis aller écrire la fonction dans le controller -> ### /App/http/Controllers/ServiceController.php ###
+
+                        public function index()
+                        {
+                            return view("backoffice.services.all");
+                        }
+
+
+    2 / récupération des variables et affichages des données dans les blades 
+            dans la fonction index des controllers, il faut ajouter: 
+                        $services = Service::all();
+                        return view("backoffice.services.all", compact("services"));
+
+/// C • INTERAGIR AVEC LES DONNEES -> Actions (générer des données, MAJ, et supprimer)
+                    1. Créer les boutons (visuels)
+                        a) supprimer 
+                        Pas d'interaction. Excecution immédiate de l'action.
+                        b) edit
+                        Elle retourne une page avec laquelle on peut intéragir
+                        c) create
+                        Elle retourne une page avec laquelle on peut intéragir
+                        Route::post('/services/store', [ServiceController::class, "store"] );
+
+
+                        -> Edit et create
+                        Dans les controllers, créer une fonction pour chaque manipulation : 
+                        public function edit($id)
+                        {
+                            $service = Service::find($id);
+                            return view("backoffice.service.edit", compact("service"));
+                        }
+
+                        public function update($id, Request $request)
+                        
+                        {
+                            $service = Service::find($id);
+                    
+                            $service->icone = $request->icone;
+                            $service->titre = $request->titre;
+                            $service->description = $request->description;
+                            $service->save();
+                    
+                            return redirect()->route("services");
+                        }
+
+                        Puis, Mettre à jour les create.blade dans le back office avec la bonne mise en page
+
+                        Dans un dernier temps, faire les routes dans la web.php 
+                        Route::get('/services/{id}/edit', [ServiceController::class, "edit"]);
+                        Route::post('/services/{id}/update', [ServiceController::class, "update"]);
+
+                        -> Delete > supprimer directement donc éxécution directe d'une action php -> doit se trouver dans une formulaire
+                    Fonction destroy
+                         a) 
+                         Dans le controller, déclarer la fonction destroy
+
+                        public function destroy($id)
+                        {
+                            $service = Service::find($id);
+                            $service->delete();
+                            return redirect()->back();
+                    
+                            // Storage::disk("public")->delete("img/". $galerie->image); // Suppression du fichier local
+                    
+                        }
+                        b) Dans le backoffice  : proposer un boutton de type submit
+                        <div class="col">
+                            <a href="services/edit" class="btn btn-warning">Edit</a>
+                            <form action="services/{{$service->id}}/destroy" method="post">
+                                @csrf
+                                <button type="submit" class="btn btn-danger text-white">Delete </button>
+                            </form>
+                        </div>
+
+                        c) web.php 
+                        Créer la route pour naviguer vers la page après destruction
+                        Route::post('/services/{id}/destroy', [ServiceController::class, "destroy"] );
+
+D. AFFICHER LES IMAGES
+
+Config>filesystems.php : changer par défaut l'adresse d'arriver des images 
+            public > root
+            'root' => public_path(),
+            'url' => env('APP_URL').'/public',
+
+    Dans les controlleurs, il fauta adapter les images 
+                        Les images sont stockées dans public (il y a 2 façons de les gérer : le lien & via une img à afficher)
+                        Voici ce qu'il faut mettre dans les controlleurs :
+                        Une ligne pour stocker l'image et 1 ligne pour le chemin
+                        $request->file("image")->storePublicly("img", "public"); 
+                        $portfolio->image = $request->file("image")->hashName();
+    /!\ Dans le fomrulaire, penser à ajouter enctype="multi-part/form-data" et method="POST" dans la balise :)
+                        
+                        a) Destroy l'image
+                        Retourner dans le controller pour ajouter à la fonction destroy
+
+                        -> ajouter  Storage::disk("public")->delete("img/" . $service->image);
+
+                        b) mettre à jour (la fonction update : exemple ici dans l'onglet portfolio car pas d'images à gérer dans le Service)
+
+                        public function update($id, Request $request)
+                        {
+                            $portfolio = Portfolio::find($id);
+                    
+                            $portfolio->nom = $request->nom;
+                  
+                            if($request->image != null){
+                                Storage::disk("public")->delete("img/" . $portfolio->image);
+                                $portfolio->image = $request->file('image')->hashName();
+                                $request->file("image")->storePublicly("img", "public");
+                              }
+                  
+                            $portfolio->categorie = $request->categorie;
+                            $portfolio->description = $request->description;
+                            
+                            $portfolio->save();
+                    
+                            return redirect()->route("portfolio");
+                        }
+
+E. Gérer les icones (ne pas oublier d'installer FontAwesome)
+
+- utiliser "randomElement" pour choisir les éléments dans un tableau
+- Listez quelques icones sur le site de FontAwesome
+- ne conserver que les classes. 
+        Exemple: <i class="fab fa-facebook"></i> 
+        On ne garde que : "fab fa-facebook"
+
+    - les répertorier dans ServiceFactory.php (dans le faker, et l'ordi choisit quel icone il montre)
+    'icone' => $this->faker->randomElement($array = array (
+                "fas fa-adjust",
+                "far fa-address-card",
+                "fab fa-app-store",
+                "fas fa-arrows-alt",
+                "fas fa-balance-scale",
+                "fab fa-battle-net",
+                "fab fa-bitcoin",
+            )),
+    - Dans all.blade de Service, on intègre 
+        // (mis en commentaire/l'avant){{-- <div class="col">{{$service->icone}}</div> --}}
+            (l'après)<div class="col"><i class="{{$service->icone}}"></i></div>

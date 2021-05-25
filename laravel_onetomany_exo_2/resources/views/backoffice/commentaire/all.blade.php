@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    @include('partials.navbar')
+    @include('partials.nav')
     <section class="container">
         <h1 class="text-center my-5">Commentaire</h1>
         <a class="btn btn-success" href={{ route("commentaire.create") }}>Create ton com</a>

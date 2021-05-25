@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    @include('partials.navbar')
+    @include('partials.nav')
     <section class="container">
         <h1 class="text-center my-5">Article</h1>
-        <a class="btn btn-success" href={{ route("article.create") }}>Create</a>
+        <a class="btn btn-success" href={{ route("articles.create") }}>Create</a>
         <table class="table">
             <thead>
                 <tr>
