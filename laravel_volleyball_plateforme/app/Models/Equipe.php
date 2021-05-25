@@ -12,7 +12,6 @@ class Equipe extends Model
 
     protected $fillable = ["club", "ville", "pays", "max", "continent_id"];
 
-    public function joueur(){
-        return $this->hasMany(Joueur::class);
-    }
+    //nom de club, une ville qu'elle représente , un pays et un maximum de joueur possible dans leur équipe et par role (2 avant, 2 centraux, 2 arrière, 3remplacants)*, continent_id (pour déterminer dans quel contient l'équipe joue)
+    
 }

@@ -13,7 +13,5 @@ class Joueur extends Model
     protected $fillable = ["nom", "prenom", "age", "telephone", "email", "genre", "pays", "role_id", "equipe_id", "photo_id",
  ];
 
-    public function joueur(){
-        return $this->hasMany(Joueur::class);
-    }
+    
 }
