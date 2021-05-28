@@ -1,0 +1,43 @@
+body {
+    min-height: 100vh;
+}
+h1, h2 {
+    font-family: "Pattaya";
+    font-size: 3rem;
+    color: $blue;
+}
+
+h2 {
+    color: black;
+}
+.home {
+    font-family: "Pattaya";
+    font-size: 2rem;
+    color: $blue;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.nav a {
+    color: $indigo;
+}
+
+.nav-item {
+    padding: 15px;
+}
+
+.nav {
+    width: 20%;
+    padding-top: 30px;
+    border-right: solid 1px grey;
+    min-height: 100vh;
+}
+.main {
+    width: 80%;
+    overflow-y: scroll;
+    height: 100vh;
+}
+
+.welcome {
+    min-height: 100vh;
+}

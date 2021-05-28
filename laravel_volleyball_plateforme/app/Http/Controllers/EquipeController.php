@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Continent;
 use App\Models\Equipe;
+use App\Models\Joueur;
 use Illuminate\Http\Request;
 
 class EquipeController extends Controller
@@ -14,7 +16,8 @@ class EquipeController extends Controller
      */
     public function index()
     {
-        //
+        $equipes = Equipe::all();
+        return view("backoffice.equipe.all", compact("equipes"));
     }
 
     /**
@@ -24,7 +27,8 @@ class EquipeController extends Controller
      */
     public function create()
     {
-        //
+        $continents = Continent::all();
+        return view("backoffice.equipe.create", compact("continents"));
     }
 
     /**
@@ -35,7 +39,23 @@ class EquipeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $equipe = new Equipe();
+
+        $equipe->nom = $request->nom;
+        $equipe->ville = $request->ville;
+        $equipe->pays = $request->pays;
+        $equipe->max = $request->max;
+        // $equipe->ATT = $request->ATT;
+        // $equipe->CT = $request->CT;
+        // $equipe->DC = $request->DC;
+        // $equipe->RP = $request->RP;
+        $continents = Continent::all();
+        $equipe->continent_id = $request->continent_id;
+        
+
+        $equipe->save();
+
+        return redirect()->route("equipes.index", compact("continents"));
     }
 
     /**
@@ -46,7 +66,8 @@ class EquipeController extends Controller
      */
     public function show(Equipe $equipe)
     {
-        //
+        
+        return view("backoffice.equipe.show", compact("equipe"));
     }
 
     /**
@@ -57,7 +78,8 @@ class EquipeController extends Controller
      */
     public function edit(Equipe $equipe)
     {
-        //
+        $continents = Continent::all();
+        return view("backoffice.equipe.edit", compact("equipe", "continents"));
     }
 
     /**
@@ -69,7 +91,16 @@ class EquipeController extends Controller
      */
     public function update(Request $request, Equipe $equipe)
     {
-        //
+        $equipe->nom = $request->nom;
+        $equipe->ville = $request->ville;
+        $equipe->pays = $request->pays;
+        $equipe->max = $request->max;
+        
+        $equipe->continent_id = $request->continent_id;
+
+        $equipe->save();
+
+        return redirect()->route("equipes.index");
     }
 
     /**
@@ -80,6 +111,13 @@ class EquipeController extends Controller
      */
     public function destroy(Equipe $equipe)
     {
-        //
+        
+        foreach($equipe->joueurs as $joueur){
+            $joueur->equipe = Equipe::where("nom", "sans equipe");
+            $joueur->save(); 
+        }
+        
+        $equipe->delete();
+        return redirect()->back();
     }
 }

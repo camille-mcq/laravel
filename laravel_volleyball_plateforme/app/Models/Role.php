@@ -10,5 +10,10 @@ class Role extends Model
     use HasFactory;
     protected $table = "roles";
 
-    protected $fillable = ["avant", "central", "arrière", "remplacant"];
+    protected $fillable = ["nom"];
+
+    public function joueurs()
+    {
+        return $this->hasMany(Joueur::class);
+    }
 }
