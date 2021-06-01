@@ -29,7 +29,8 @@ class UserController extends Controller
     {
         //
         $profils = Profil::all();
-        return view("backoffice.user.create", compact("profils"));
+        $users = User::all();
+        return view("backoffice.user.create", compact("profils", "users"));
     }
 
     /**

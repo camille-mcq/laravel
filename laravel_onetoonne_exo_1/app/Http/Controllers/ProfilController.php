@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Profil;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProfilController extends Controller
@@ -15,6 +16,8 @@ class ProfilController extends Controller
     public function index()
     {
         //
+        $profils = Profil::all();
+        return view("backoffice.profil.all", compact("profils"));
     }
 
     /**
@@ -25,6 +28,8 @@ class ProfilController extends Controller
     public function create()
     {
         //
+        return view("backoffice.profile.create");
+        
     }
 
     /**
@@ -36,6 +41,14 @@ class ProfilController extends Controller
     public function store(Request $request)
     {
         //
+        $profil = new Profil();
+        $profil->name = $request->name;
+        $profil->age = $request->age;
+        $profil->phone = $request->phone;
+        $profil->created_at = now();
+
+        $profil->save;
+        return redirect()->route('profil.index')->with('successMessage', "Votre Profil, $profil->name a bien été ajouté");
     }
 
     /**
@@ -47,6 +60,7 @@ class ProfilController extends Controller
     public function show(Profil $profil)
     {
         //
+        return view('backoffice.profil.show', compact('profil'));
     }
 
     /**
@@ -58,6 +72,7 @@ class ProfilController extends Controller
     public function edit(Profil $profil)
     {
         //
+        return view('backoffice.profil.edit', compact('profil'));
     }
 
     /**
@@ -70,6 +85,13 @@ class ProfilController extends Controller
     public function update(Request $request, Profil $profil)
     {
         //
+        $profil->name = $request->name;
+        $profil->age = $request->nickname;
+        $profil->telephone = $request->profil_id;
+        $profil->updated_at = now();
+
+        $profil->save();
+        return view('backoffice.profil.edit', compact('profil'));   
     }
 
     /**
@@ -81,5 +103,7 @@ class ProfilController extends Controller
     public function destroy(Profil $profil)
     {
         //
+        $profil->delete();
+        return redirect()->back()->with("sucessMessage", "Votre profil a bien été supprimé");
     }
 }
