@@ -28,7 +28,7 @@ class ProfilController extends Controller
     public function create()
     {
         //
-        return view("backoffice.profile.create");
+        return view("backoffice.profil.create");
         
     }
 

@@ -13,7 +13,7 @@
                         <a class="nav-link active" href={{ route("users.index") }}>Users</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href={{ route("profils.index") }}>Profils</a>
+                        <a class="nav-link active" href={{ route("profil.index") }}>Profils</a>
                     </li>
                 </ul>
             </div>

@@ -20,4 +20,4 @@ Route::get('/', function () {
 });
 
 Route::resource("/users", UserController::class);
-Route::resource("/profils", ProfilController::class);
+Route::resource("/profil", ProfilController::class);
