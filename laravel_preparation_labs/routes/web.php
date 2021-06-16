@@ -20,5 +20,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
+
+Route::get('/backHome',function(){
+    return view("backoffice.partial.backHome");
+})->name("backOffice"); 
  
 require __DIR__.'/auth.php';
